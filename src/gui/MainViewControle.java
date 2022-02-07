@@ -2,9 +2,18 @@ package gui;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import application.Main;
+import gui.util.Alerts;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.VBox;
 
 public class MainViewControle implements Initializable{
 
@@ -21,16 +30,43 @@ public class MainViewControle implements Initializable{
 	}
 	@FXML
 	public void onMenuItemDepartamentoAction() {
-		System.out.println("menuItemDepartamento");
+		loadView("/gui/ListarDepartamento.fxml");
 	}
 	@FXML
 	public void onMenuItemAboutAction() {
-		System.out.println("menuItemAbout");
+		loadView("/gui/About.fxml");
 	}
 	
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
 		
-		
 	}
+	
+	private void loadView(String absoluteName) {
+		try {
+			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(absoluteName));
+			VBox newVBox = fxmlLoader.load();
+			
+			Scene mainScene = Main.getMainScene();
+			VBox mainVBox = (VBox) ((ScrollPane) mainScene.getRoot()).getContent();
+			
+			Node mainMenu = mainVBox.getChildren().get(0);
+			mainVBox.getChildren().clear();
+			mainVBox.getChildren().add(mainMenu);
+			mainVBox.getChildren().addAll(newVBox.getChildren());
+			
+		} catch (Exception e) {
+		
+			Alerts.showAlert("IO Exception", "Erro de carregamento de tela", e.getMessage(), AlertType.ERROR);
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
